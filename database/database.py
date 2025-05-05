@@ -24,19 +24,24 @@ class Database:
             FOREIGN KEY(customer_id) REFERENCES customers(id)
         )''')
 
-        # Create jobs table
-        cursor.execute('''CREATE TABLE IF NOT EXISTS jobs (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            description TEXT NOT NULL,
-            status TEXT NOT NULL,
-            technician_id INTEGER,
-            FOREIGN KEY(technician_id) REFERENCES technicians(id)
-        )''')
+        # Create jobs table (with equipment_id and technician_id)
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS jobs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                equipment_id INTEGER NOT NULL,
+                technician_id INTEGER,
+                description TEXT NOT NULL,
+                status TEXT NOT NULL,
+                FOREIGN KEY(equipment_id) REFERENCES equipment(id),
+                FOREIGN KEY(technician_id) REFERENCES technicians(id)
+            )
+        ''')
         
         # Create technicians table
         cursor.execute('''CREATE TABLE IF NOT EXISTS technicians (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
             expertise TEXT NOT NULL
         )''')
 

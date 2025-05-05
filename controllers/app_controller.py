@@ -25,9 +25,13 @@ class AppController:
                     self.current_user = Administrator(name)
                     self.admin_menu()
                 elif choice == '2':
-                    name = input("Enter technician name: ")
-                    self.current_user = Technician(name)
-                    self.technician_menu()
+                    email = input("Enter technician email: ")
+                    technician = Technician.find_by_email(email)
+                    if technician:
+                        self.current_user = technician
+                        self.technician_menu()
+                    else:
+                        print("Technician not found.")
                 elif choice == '3':
                     email = input("Enter your email: ")
                     customer = Customer.find_by_email(email)
@@ -51,7 +55,8 @@ class AppController:
                 print("1. Register Walk-in Customer")
                 print("2. List All Jobs")
                 print("3. Allocate Job to Technician")
-                print("4. Logout")
+                print("4. Add New Technician")
+                print("5. Logout")
                 choice = input("Choose an option: ")
                 if choice == '1':
                     self.register_walkin_customer()
@@ -60,12 +65,26 @@ class AppController:
                 elif choice == '3':
                     self.allocate_job()
                 elif choice == '4':
+                    self.add_technician()
+                elif choice == '5':
                     break
                 else:
                     print("Invalid choice")
             except KeyboardInterrupt:
                 print("\n[!] Returning to admin menu.")
                 break
+
+
+    def add_technician(self):
+        try:
+            name = input("Enter technician name: ")
+            email = input("Enter technician email: ")
+            expertise = input("Enter technician expertise: ")
+            technician = Technician(name,email, expertise)
+            technician.save()
+            print(f"Technician '{name}' with '{email}' added successfully.")
+        except Exception as e:
+            print(f"[!] Error adding technician: {e}")
 
     def register_walkin_customer(self):
         try:
@@ -89,9 +108,10 @@ class AppController:
 
     def allocate_job(self):
         try:
+            equipment_id = input("Enter equipment ID to allocate job: ")
             technician_id = input("Enter technician ID to allocate job: ")
             description = input("Enter job description: ")
-            job = Job(description, technician_id=technician_id)
+            job = Job(description, technician_id=technician_id,equipment_id=equipment_id)
             job.save()
             print(f"Job created with ID: {job.id}")
         except Exception as e:

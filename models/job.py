@@ -1,17 +1,18 @@
 from database.database import Database
 
 class Job:
-    def __init__(self, description, status="Job Created", technician_id=None, id=None):
+    def __init__(self, description, status="Job Created", technician_id=None,equipment_id=None, id=None):
         self.description = description
         self.status = status
         self.technician_id = technician_id
+        self.equipment_id = equipment_id
         self.id = id
 
     def save(self):
         db = Database().get_connection()
         cursor = db.cursor()
         cursor.execute(
-            "INSERT INTO jobs (description, status, technician_id) VALUES (?, ?, ?)",
+            "INSERT INTO jobs (description, status, technician_id,equipment_id) VALUES (?, ?, ? ,?)",
             (self.description, self.status, self.technician_id)
         )
         db.commit()
