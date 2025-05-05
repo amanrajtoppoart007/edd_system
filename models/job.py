@@ -53,3 +53,10 @@ class Job:
         except Exception as e:
             print(f"[!] Error updating jobs: {e}")
             return False
+        
+@staticmethod
+def get_assessed_jobs():
+    db = Database().get_connection()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM jobs WHERE status = 'Job Assessed'")
+    return cursor.fetchall()        

@@ -56,7 +56,8 @@ class AppController:
                 print("2. List All Jobs")
                 print("3. Allocate Job to Technician")
                 print("4. Add New Technician")
-                print("5. Logout")
+                print("5. View Assessed Jobs and Add Cost")
+                print("6. Logout")
                 choice = input("Choose an option: ")
                 if choice == '1':
                     self.register_walkin_customer()
@@ -67,6 +68,8 @@ class AppController:
                 elif choice == '4':
                     self.add_technician()
                 elif choice == '5':
+                    self.view_assessed_jobs_and_add_cost()
+                elif choice == '6':
                     break
                 else:
                     print("Invalid choice")
@@ -185,3 +188,24 @@ class AppController:
             print("Equipment registered for repair.")
         except Exception as e:
             print(f"Error while booking equipment: {e}")
+
+
+    def view_assessed_jobs_and_add_cost(self):
+        try:
+            assessed_jobs = Job.get_assessed_jobs()
+            if not assessed_jobs:
+                print("No assessed jobs found.")
+                return
+
+            print("\n--- Assessed Jobs ---")
+            for job in assessed_jobs:
+                print(f"Job ID: {job[0]}, Equipment ID: {job[1]}, Technician ID: {job[2]}, Description: {job[3]}, Status: {job[4]}, Cost: {job[5] if len(job) > 5 else 'N/A'}")
+
+            job_id = input("Enter Job ID to add cost (or press Enter to skip): ").strip()
+            if job_id:
+                cost = input("Enter cost amount: ").strip()
+                Job.update_cost(int(job_id), float(cost))
+                print("Cost updated.")
+        except Exception as e:
+            print(f"[!] Error: {e}")
+
