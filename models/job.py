@@ -23,7 +23,7 @@ class Job:
     def get_all():
         db = Database().get_connection()
         cursor = db.cursor()
-        cursor.execute("SELECT * FROM jobs")
+        cursor.execute("SELECT jobs.* , customers.name  FROM jobs  JOIN equipment ON jobs.equipment_id = equipment.id JOIN customers ON customers.id = equipment.customer_id")
         return cursor.fetchall()
 
     @staticmethod
@@ -54,9 +54,16 @@ class Job:
             print(f"[!] Error updating jobs: {e}")
             return False
         
-@staticmethod
-def get_assessed_jobs():
-    db = Database().get_connection()
-    cursor = db.cursor()
-    cursor.execute("SELECT * FROM jobs WHERE status = 'Job Assessed'")
-    return cursor.fetchall()        
+    @staticmethod
+    def get_assessed_jobs():
+        db = Database().get_connection()
+        cursor = db.cursor()
+        cursor.execute("SELECT * FROM jobs WHERE status = 'Job Assessed'")
+        return cursor.fetchall()
+
+    @staticmethod
+    def update_cost(job_id, cost):
+        db = Database().get_connection()
+        cursor = db.cursor()
+        cursor.execute("UPDATE jobs SET job_cost = ? , status = ?  WHERE id = ?", (cost,'Job Completed', job_id))
+        db.commit()        

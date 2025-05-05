@@ -27,7 +27,7 @@ class Database:
             FOREIGN KEY(customer_id) REFERENCES customers(id)
         )''')
 
-        # Create jobs table (with equipment_id and technician_id)
+        # Create jobs table (with equipment_id, technician_id, and job_cost)
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS jobs (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,6 +35,7 @@ class Database:
                 technician_id INTEGER,
                 description TEXT NOT NULL,
                 status TEXT NOT NULL,
+                job_cost REAL DEFAULT 0,
                 FOREIGN KEY(equipment_id) REFERENCES equipment(id),
                 FOREIGN KEY(technician_id) REFERENCES technicians(id)
             )

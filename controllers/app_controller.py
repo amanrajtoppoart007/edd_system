@@ -107,7 +107,8 @@ class AppController:
     def list_jobs(self):
         jobs = Job.get_all()
         for job in jobs:
-            print(f"Job ID: {job[0]}, Description: {job[1]}, Status: {job[2]}")
+            print(f"Job ID: {job[0]}, Customer: {job[6]} , Description: {job[3]}, Status: {job[4]} , Cost: {job[5]}")
+
 
     def allocate_job(self):
         try:
