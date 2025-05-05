@@ -1,8 +1,25 @@
-from models.user import User
-from models.roles import Roles
+from database.database import Database
 
-class Technician(User):
-    def __init__(self, name):
-        super().__init__(name, Roles.TECHNICIAN)
+class Technician:
+    def __init__(self, name, expertise, id=None):
+        self.name = name
+        self.expertise = expertise
+        self.id = id
 
-    # Future: implement job viewing/updating
+    def save(self):
+        db = Database().get_connection()
+        cursor = db.cursor()
+        cursor.execute(
+            "INSERT INTO technicians (name, expertise) VALUES (?, ?)",
+            (self.name, self.expertise)
+        )
+        db.commit()
+        self.id = cursor.lastrowid
+        return self.id
+
+    @staticmethod
+    def get_all():
+        db = Database().get_connection()
+        cursor = db.cursor()
+        cursor.execute("SELECT * FROM technicians")
+        return cursor.fetchall()
