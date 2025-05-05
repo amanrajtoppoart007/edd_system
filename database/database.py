@@ -1,12 +1,15 @@
 import sqlite3
 
 class Database:
+    _connection = None  # Singleton connection
+
     def __init__(self):
-        self.connection = sqlite3.connect("edd_system.db")
-        self.create_tables()
+        if Database._connection is None:
+            Database._connection = sqlite3.connect("edd_system.db")
+            self.create_tables()
 
     def create_tables(self):
-        cursor = self.connection.cursor()
+        cursor = Database._connection.cursor()
         
         # Create customers table
         cursor.execute('''CREATE TABLE IF NOT EXISTS customers (
@@ -45,7 +48,7 @@ class Database:
             expertise TEXT NOT NULL
         )''')
 
-        self.connection.commit()
+        Database._connection.commit()
 
     def get_connection(self):
-        return self.connection
+        return Database._connection

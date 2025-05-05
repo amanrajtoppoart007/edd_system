@@ -121,12 +121,15 @@ class AppController:
         while True:
             try:
                 print("\n--- Technician Menu ---")
-                print("1. List Jobs Assigned to Me")
-                print("2. Logout")
+                print("1. View My Assigned Jobs")
+                print("2. Mark Jobs as Assessed")
+                print("3. Logout")
                 choice = input("Choose an option: ")
                 if choice == '1':
                     self.list_jobs_for_technician()
                 elif choice == '2':
+                    self.change_job_status()
+                elif choice == '3':
                     break
                 else:
                     print("Invalid choice")
@@ -140,11 +143,21 @@ class AppController:
             jobs = Job.get_by_technician(technician_id)
             if jobs:
                 for job in jobs:
-                    print(f"Job ID: {job[0]}, Description: {job[1]}, Status: {job[2]}")
+                    print(f"\nJob ID: {job[0]}, Description: {job[1]}, Status: {job[2]}")
+                    print(f"  Equipment: {job[3]}, Serial: {job[4]}")
             else:
                 print("No jobs assigned to you.")
         except Exception as e:
             print(f"Error while listing jobs: {e}")
+
+    def change_job_status(self):
+        ids = input("Enter Job IDs to mark as 'Job Assessed' (comma-separated): ")
+        try:
+            job_ids = [int(x.strip()) for x in ids.split(",") if x.strip().isdigit()]
+            if Job.update_status_for_technician(job_ids, self.current_user.id):
+                print("Selected jobs updated to 'Job Assessed'.")
+        except ValueError:
+            print("Invalid input. Enter numeric Job IDs separated by commas.")
 
     def customer_menu(self):
         while True:

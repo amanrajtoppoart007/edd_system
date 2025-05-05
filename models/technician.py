@@ -1,7 +1,7 @@
 from database.database import Database
 
 class Technician:
-    def __init__(self, name, email=None, expertise=None, id=None):
+    def __init__(self, name=None, email=None, expertise=None, id=None):
         self.id = id
         self.name = name
         self.email = email
@@ -15,7 +15,10 @@ class Technician:
         db.commit()
         self.id = cursor.lastrowid
         return self.id
-
+    
+    def get_id(self):
+            return self.id
+    
     @staticmethod
     def find_by_email(email):
         db = Database().get_connection()
