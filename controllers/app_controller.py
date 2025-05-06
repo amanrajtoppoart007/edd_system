@@ -1,4 +1,6 @@
 import sys
+import unittest
+import os # Import the os module
 from models.customer import Customer
 from models.equipment import Equipment
 from models.job import Job
@@ -19,7 +21,8 @@ class AppController:
                 print("1. Login as Administrator")
                 print("2. Login as Technician")
                 print("3. Login as Customer")
-                print("4. Exit")
+                print("4. Test Modules")
+                print("5. Exit")
                 choice = input("Choose an option: ")
                 if choice == '1':
                     name = input("Enter admin name: ")
@@ -42,6 +45,8 @@ class AppController:
                     else:
                         print("Customer not found. Please register as walk-in.")
                 elif choice == '4':
+                    self.run_tests()
+                elif choice == '5':
                     print("Goodbye!")
                     sys.exit()
                 else:
@@ -143,8 +148,8 @@ class AppController:
 
             customer = Customer(name, email)
             customer_id = customer.save()
-
-            Equipment.save(customer_id, equipment_type, serial)
+            equipment = Equipment(customer_id, equipment_type, serial)
+            equipment.save()
             print(f"Customer {name} and equipment details saved.")
         except Exception as e:
             print(f"Error while registering customer: {e}")
@@ -233,7 +238,8 @@ class AppController:
             equipment_type = input("Enter equipment type: ")
             serial = input("Enter serial number: ")
             customer_id = self.current_user.get_id()
-            Equipment.save(customer_id, equipment_type, serial)
+            equipment = Equipment(customer_id, equipment_type, serial)
+            equipment.save(customer_id, equipment_type, serial)
             print("Equipment registered for repair.")
         except Exception as e:
             print(f"Error while booking equipment: {e}")
@@ -257,4 +263,41 @@ class AppController:
                 print("Cost updated.")
         except Exception as e:
             print(f"[!] Error: {e}")
+
+    def run_tests(self):
+            """Discovers and runs tests in the 'tests' directory."""
+            print("\n--- Running Unit Tests ---")
+            # Define the directory where tests are located
+            # Assumes 'tests' directory is in the same parent directory as this script
+            # Adjust the path if your structure is different
+            test_dir = os.path.join(os.path.dirname(__file__), '..', 'tests')
+            if not os.path.isdir(test_dir):
+                # Fallback: Assume 'tests' is a direct subdirectory
+                test_dir = os.path.join(os.path.dirname(__file__), 'tests')
+
+            if not os.path.isdir(test_dir):
+                print(f"Error: Test directory not found at expected locations.")
+                print(f"Looked in: {os.path.join(os.path.dirname(__file__), '..', 'tests')} and {os.path.join(os.path.dirname(__file__), 'tests')}")
+                return
+
+            print(f"Discovering tests in: {test_dir}")
+            # Discover tests
+            loader = unittest.TestLoader()
+            suite = loader.discover(test_dir, pattern='test_*.py') # Standard pattern for test files
+
+            if suite.countTestCases() == 0:
+                print("No tests found.")
+                return
+
+            # Run the tests
+            runner = unittest.TextTestRunner(verbosity=2) # verbosity=2 provides more detailed output
+            result = runner.run(suite)
+
+            print("--- Test Run Complete ---")
+            # Optional: Print summary or handle results further
+            if result.wasSuccessful():
+                print("All tests passed successfully!")
+            else:
+                print("Some tests failed.")
+            input("Press Enter to return to the main menu...") # Pause to see results
 

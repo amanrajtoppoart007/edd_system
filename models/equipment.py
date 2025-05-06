@@ -19,17 +19,6 @@ class Equipment:
         return self.id
 
     @staticmethod
-    def save(customer_id, type, serial_number):
-        db = Database().get_connection()
-        cursor = db.cursor()
-        cursor.execute(
-            "INSERT INTO equipment (customer_id, type, serial_number) VALUES (?, ?, ?)",
-            (customer_id, type, serial_number)
-        )
-        db.commit()
-        return cursor.lastrowid
-
-    @staticmethod
     def get_by_customer(customer_id):
         db = Database().get_connection()
         cursor = db.cursor()

@@ -13,6 +13,13 @@ class Customer:
         db.commit()
         self.id = cursor.lastrowid
         return self.id
+    
+    @staticmethod
+    def get_all():
+        db = Database().get_connection()
+        cursor = db.cursor()
+        cursor.execute("SELECT * FROM customers")
+        return cursor.fetchall()
 
     @staticmethod
     def find_by_email(email):
