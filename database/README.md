@@ -46,6 +46,7 @@ edd-technologies/
 ├── main.py
 └── README.md
 
+---
 
 ## 🧰 Installation
 
@@ -64,7 +65,9 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 pip install -r requirements.txt
 
-▶️ Running the App
+---
+
+## ▶️ Running the app
 Run the main interface:
 
 python main.py
@@ -73,10 +76,14 @@ Tests are located in the tests/ directory and can be executed with:
 
 python tests/test_cases.py
 
+---
+
 🐞 Known Issues
 No GUI (not required at this stage)
 Customer promotions/notifications not persisted
 Basic notification system (printed only)
+
+---
 
 🧠 Future Enhancements
 Persistent notification system
@@ -85,9 +92,15 @@ Advanced customer loyalty & promotions
 Technician performance tracking
 Integration with external supplier APIs
 
+---
+
 📜 License
 This project is open source and available under the MIT License.
+
+---
 
 👨‍💻 Author
 Developed by [Your Name]
 For academic or demonstration purposes.
+
+---
