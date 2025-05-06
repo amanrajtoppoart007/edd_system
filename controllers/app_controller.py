@@ -5,6 +5,7 @@ from models.job import Job
 from models.administrator import Administrator
 from models.technician import Technician
 from database.database import Database
+from models.supplier import Supplier
 
 class AppController:
     def __init__(self):
@@ -57,7 +58,8 @@ class AppController:
                 print("3. Allocate Job to Technician")
                 print("4. Add New Technician")
                 print("5. View Assessed Jobs and Add Cost")
-                print("6. Logout")
+                print("6. Manage Suppliers")
+                print("7. Logout")
                 choice = input("Choose an option: ")
                 if choice == '1':
                     self.register_walkin_customer()
@@ -70,12 +72,55 @@ class AppController:
                 elif choice == '5':
                     self.view_assessed_jobs_and_add_cost()
                 elif choice == '6':
+                    self.manage_suppliers()
+                elif choice == '7':
                     break
                 else:
                     print("Invalid choice")
             except KeyboardInterrupt:
                 print("\n[!] Returning to admin menu.")
                 break
+
+
+
+    def remove_suppliers(self):
+        ids_input = input("Enter supplier IDs to remove (comma separated): ")
+        try:
+            ids = [int(i.strip()) for i in ids_input.split(",") if i.strip().isdigit()]
+            Supplier.remove_suppliers_by_ids(ids)
+            print("Suppliers removed successfully.")
+        except Exception as e:
+            print(f"Error removing suppliers: {e}")
+
+    def manage_suppliers(self):
+        try:
+            print("\n--- Manage Suppliers ---")
+            print("1. Add Supplier")
+            print("2. View All Suppliers")
+            print("3. Remove Suppliers")
+            sub_choice = input("Choose an option: ")
+
+            if sub_choice == '1':
+                name = input("Enter supplier name: ")
+                part_type = input("Enter part type: ")
+                location = input("Enter supplier location: ")
+                supplier = Supplier(name, part_type, location)
+                supplier.save()
+                print("Supplier added successfully.")
+            elif sub_choice == '2':
+                suppliers = Supplier.get_all()
+                if suppliers:
+                    for s in suppliers:
+                        print(f"ID: {s[0]}, Name: {s[1]}, Part Type: {s[2]}, Location: {s[3]}")
+                else:
+                    print("No suppliers found.")
+            elif sub_choice == '3': 
+                self.remove_suppliers()       
+            else:
+                print("Invalid option.")
+        except Exception as e:
+            print(f"[!] Error: {e}")
+
 
 
     def add_technician(self):
@@ -127,14 +172,17 @@ class AppController:
                 print("\n--- Technician Menu ---")
                 print("1. View My Assigned Jobs")
                 print("2. Mark Jobs as Assessed")
-                print("3. Logout")
+                print("3. Manage Suppliers")
+                print("4. Logout")
                 choice = input("Choose an option: ")
                 if choice == '1':
                     self.list_jobs_for_technician()
                 elif choice == '2':
                     self.change_job_status()
                 elif choice == '3':
-                    break
+                    self.manage_suppliers()
+                elif choice == '4':
+                    break  
                 else:
                     print("Invalid choice")
             except KeyboardInterrupt:

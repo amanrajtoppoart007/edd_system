@@ -49,6 +49,17 @@ class Database:
             expertise TEXT NOT NULL
         )''')
 
+        # Create suppliers table
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS suppliers (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                part_type TEXT NOT NULL,
+                location TEXT NOT NULL
+            )
+        ''')
+
+
         Database._connection.commit()
 
     def get_connection(self):
