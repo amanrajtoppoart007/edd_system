@@ -239,7 +239,7 @@ class AppController:
             serial = input("Enter serial number: ")
             customer_id = self.current_user.get_id()
             equipment = Equipment(customer_id, equipment_type, serial)
-            equipment.save(customer_id, equipment_type, serial)
+            equipment.save()
             print("Equipment registered for repair.")
         except Exception as e:
             print(f"Error while booking equipment: {e}")
